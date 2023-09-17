@@ -1,4 +1,4 @@
-# Falshcard
+# IT project team 26 unimelb
 # Flashcard
 
  This is demo of flashcard. Our flashcard will run based on the question base in flashcard/flashcards.csv. app.py is the back-end code of our flashcard, the index.html in Falshcard/templates are used to construct a web for display our flashcard
