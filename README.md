@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-Download all files in flashcard and run app.py, the visit http://127.0.0.1:5000/ to run the flashcard demo
+Download all files in flashcard and run app.py, then visit http://127.0.0.1:5000/ to run the flashcard demo
 
 ### Prerequisites
 
