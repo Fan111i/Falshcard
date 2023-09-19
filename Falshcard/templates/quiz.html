@@ -1,0 +1,12 @@
+<h2>Quiz</h2>
+
+<p>Progress: {{ progress }}/{{ total }}</p>
+<p>Correct Answers: {{ correct }}</p>
+
+<form action="/quiz" method="post">
+    <p><strong>Question:</strong> {{ flashcard.question }}</p>
+    {% for choice in flashcard.choices %}
+    <input type="radio" name="choice" value="{{ choice }}"> {{ choice }}<br>
+    {% endfor %}
+    <input type="submit" value="Submit Answer">
+</form>

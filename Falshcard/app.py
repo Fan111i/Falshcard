@@ -1,38 +1,75 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for
 import csv
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'
 
-# Load flashcards from CSV file
 def load_flashcards(filename='flashcards.csv'):
     cards = []
     with open(filename, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             cards.append({
+                'id': len(cards),
                 'question': row['question'],
                 'answer': row['answer'],
                 'choices': row['choices'].split(';')
             })
     return cards
 
-flashcards = load_flashcards()
-
+def save_flashcard(question, answer, choices, filename='flashcards.csv'):
+    with open(filename, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([question, answer, ";".join(choices)])
 @app.route('/')
-def index():
-    card = flashcards[0]  # For simplicity, just using the first card
-    return render_template('index.html', question=card['question'], choices=card['choices'])
+def homepage():
+    print("Loading homepage...")  # 添加这一行
+    return render_template('homepage.html')
 
-@app.route('/check_answer', methods=['POST'])
-def check_answer():
-    selected_answer = request.form.get('choice')
-    correct_answer = flashcards[0]['answer']
-    is_correct = selected_answer == correct_answer
-    return jsonify({
-        'is_correct': is_correct,
-        'correct_answer': correct_answer
-    })
+@app.route('/create')
+def create():
+    return render_template('create.html')
+
+@app.route('/create_flashcard', methods=['POST'])
+def create_flashcard():
+    question = request.form['question']
+    answer = request.form['answer']
+    choices = request.form.getlist('choices')
+    save_flashcard(question, answer, choices)
+    return redirect(url_for('select'))
+
+
+@app.route('/select')
+def select():
+    flashcards = load_flashcards()
+    return render_template('select.html', flashcards=flashcards)
+
+@app.route('/add_to_base', methods=['POST'])
+def add_to_base():
+    flashcards = load_flashcards()
+    selected_ids = request.form.getlist('selected')
+    session['question_base'] = [flashcards[int(i)] for i in selected_ids]
+    session['current_index'] = 0
+    session['correct_answers'] = 0
+    return redirect(url_for('quiz'))
+
+@app.route('/quiz', methods=['GET', 'POST'])
+def quiz():
+    if 'current_index' not in session or session['current_index'] >= len(session['question_base']):
+        return render_template('result.html', correct=session['correct_answers'], total=len(session['question_base']))
+
+    current_flashcard = session['question_base'][session['current_index']]
+    if request.method == 'POST':
+        if request.form.get('choice') == current_flashcard['answer']:
+            session['correct_answers'] += 1
+        session['current_index'] += 1
+        return redirect(url_for('quiz'))
+
+    return render_template('quiz.html', 
+                           flashcard=current_flashcard, 
+                           progress=session['current_index'], 
+                           total=len(session['question_base']),
+                           correct=session['correct_answers'])
 
 if __name__ == '__main__':
     app.run(debug=True)
