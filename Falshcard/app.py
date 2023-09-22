@@ -23,7 +23,7 @@ def save_flashcard(question, answer, choices, filename='flashcards.csv'):
         writer.writerow([question, answer, ";".join(choices)])
 @app.route('/')
 def homepage():
-    print("Loading homepage...") 
+
     return render_template('homepage.html')
 
 @app.route('/create')

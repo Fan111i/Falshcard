@@ -2,53 +2,64 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
-    background-color: #f3f4f6; /* 这会为整个背景添加一个淡灰色的背景色 */
+    height: 100vh;
+    background-color: #f3f4f6;
 }
 
 .flashcard {
-    border: 2px solid #E57373; /* 这是卡片的边框颜色 */
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 8px;
     padding: 20px;
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.15); /* 这为卡片添加了一个轻微的阴影 */
-    width: 300px;
-    background-color: #fff; /* 卡片的背景色为白色 */
-    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.question {
-    font-weight: bold;
-    margin-bottom: 20px;
-    font-size: 1.5em; /* 这会使问题的文字稍大一些 */
+.question, .photo-area {
     text-align: center;
 }
 
-.choices label {
-    display: block;
-    margin-bottom: 10px;
-    background-color: #E57373; /* 选择项的背景颜色 */
-    color: #fff; /* 选择项的文字颜色 */
-    padding: 8px 12px;
-    border-radius: 8px; 
-    cursor: pointer;
-    transition: background-color 0.3s; /* 这为背景色添加了一个渐变效果 */
-}
-
-.choices label:hover {
-    background-color: #EF9A9A; /* 当鼠标悬停在选择项上时的背景颜色 */
-}
-
-button {
-    display: block;
-    margin-top: 20px;
-    padding: 10px 15px;
-    background-color: #E57373;
-    color: #fff;
-    border: none;
+.photo-area {
+    height: 200px;
+    background-color: #e0e0e0;  /* 临时的背景色，您可以更改或添加图片 */
     border-radius: 8px;
+}
+
+.choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.choice-card {
+    background-color: white;
+    padding: 10px 20px;  /* 已存在的padding值，您可以根据需要增加或减少 */
+    margin: 5px;  /* 为了给卡片之间留出一些空间 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* 轻微的阴影效果 */
+    width: calc(50% - 10px);  /* 我假设有两个选项卡片在一行，这将使它们占据大部分空间，但仍留有间隔 */
+    display: inline-block;  /* 这将使卡片并排放置 */
+    box-sizing: border-box;  /* 这将确保宽度包括padding和border */
+    cursor: pointer;  /* 当用户将鼠标悬停在卡片上时，它将显示为指针 */
+    transition: background-color 0.3s ease;  /* 这是一个过渡效果，当背景颜色改变时 */
+}
+
+.choice-card:hover {
+    background-color: #f5f5f5;  /* 当用户悬停在卡片上时，背景颜色会稍微变深 */
+}
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4a90e2;
+    color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #EF9A9A; /* 当鼠标悬停在按钮上时的背景颜色 */
+    background-color: #357ab7;
 }
