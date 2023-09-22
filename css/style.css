@@ -1691,7 +1691,9 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   height: calc(2.875rem + 2px); }
 
 .form-group {
-  margin-bottom: 1rem; }
+	margin-bottom: 1rem;
+	margin-top: 5px;
+}
 
 .form-text {
   display: block;
@@ -2040,8 +2042,9 @@ fieldset:disabled a.btn {
     border-color: #3fc3e8; }
     .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
     .show > .btn-primary.dropdown-toggle:focus {
-      -webkit-box-shadow: 0 0 0 0.2rem rgba(120, 213, 239, 0.5);
-      box-shadow: 0 0 0 0.2rem rgba(120, 213, 239, 0.5); }
+	-webkit-box-shadow: 0 0 0 0.2rem rgba(113,210,237,0.50);
+	box-shadow: 0 0 0 0.2rem rgba(113,210,237,0.50);
+}
 
 .btn-secondary {
   color: #fff;
