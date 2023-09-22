@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from login.models import RegisterUser
 from django.shortcuts import redirect
-
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -34,7 +34,7 @@ def register(request):
             register = RegisterUser()
             # save the username and user psw to the database
             register.reg_name = userName
-            register.reg_pwd = userPassword
+            register.reg_pwd = make_password(userPassword)
             register.save()
             return redirect("/login/")
     else:
@@ -51,7 +51,7 @@ def login(request):
             # retrieve user info from database
             user = RegisterUser.objects.get(reg_name=userName)
             # correct pwd => login
-            if userPassword == user.reg_pwd:
+            if make_password(userPassword) == user.reg_pwd:
                 return redirect("/index/")
             # wrong pwd => try login again
             else:
