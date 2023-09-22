@@ -1,0 +1,54 @@
+.flashcard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background-color: #f3f4f6; /* 这会为整个背景添加一个淡灰色的背景色 */
+}
+
+.flashcard {
+    border: 2px solid #E57373; /* 这是卡片的边框颜色 */
+    padding: 20px;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.15); /* 这为卡片添加了一个轻微的阴影 */
+    width: 300px;
+    background-color: #fff; /* 卡片的背景色为白色 */
+    border-radius: 15px; 
+}
+
+.question {
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.5em; /* 这会使问题的文字稍大一些 */
+    text-align: center;
+}
+
+.choices label {
+    display: block;
+    margin-bottom: 10px;
+    background-color: #E57373; /* 选择项的背景颜色 */
+    color: #fff; /* 选择项的文字颜色 */
+    padding: 8px 12px;
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: background-color 0.3s; /* 这为背景色添加了一个渐变效果 */
+}
+
+.choices label:hover {
+    background-color: #EF9A9A; /* 当鼠标悬停在选择项上时的背景颜色 */
+}
+
+button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #E57373;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #EF9A9A; /* 当鼠标悬停在按钮上时的背景颜色 */
+}

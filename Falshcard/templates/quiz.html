@@ -1,12 +1,32 @@
-<h2>Quiz</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
 
-<p>Progress: {{ progress }}/{{ total }}</p>
-<p>Correct Answers: {{ correct }}</p>
-
-<form action="/quiz" method="post">
-    <p><strong>Question:</strong> {{ flashcard.question }}</p>
-    {% for choice in flashcard.choices %}
-    <input type="radio" name="choice" value="{{ choice }}"> {{ choice }}<br>
-    {% endfor %}
-    <input type="submit" value="Submit Answer">
-</form>
+    <!-- 使用 Flask 的 url_for 函数来链接到静态文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+</head>
+<body>
+<div class="flashcard-container">
+    <div class="flashcard">
+        <form method="post" action="{{ url_for('quiz') }}">
+            <div class="question">
+                {{ flashcard.question }}
+            </div>
+            <div class="choices">
+                {% for choice in flashcard.choices %}
+                <label>
+                    <input type="radio" name="choice" value="{{ choice }}" required>
+                    {{ choice }}
+                </label>
+                {% endfor %}
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
