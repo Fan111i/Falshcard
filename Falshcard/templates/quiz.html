@@ -10,13 +10,12 @@
 <body>
     <div class="flashcard-container">
         <div class="flashcard">
-            <!-- 开始表单区域 -->
             <form method="post" action="{{ url_for('quiz') }}">
                 <div class="question">
                     {{ flashcard.question }}
                 </div>
                 <div class="photo-area">
-                    <!-- 您可以在这里添加图片 -->
+                    <!-- 这里添加图片 -->
                 </div>
                 <div class="choices">
                     {% for i in range(0, flashcard.choices|length, 2) %}
@@ -40,7 +39,6 @@
                 </div>
                 <button type="submit">Submit</button>
             </form>
-            <!-- 结束表单区域 -->
         </div>
     </div>
     <script>
