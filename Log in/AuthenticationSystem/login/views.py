@@ -22,13 +22,13 @@ def register(request):
             # user already exist then return to home page
             if user:
                 msg = "user already exist"
-                return render(request, "register.html", {"msg":msg})
+                return render(request, "signup.html", {"msg":msg})
         except:
             # password does not match to rePassword
             # then return to register page and try again
             if userPassword != userRePassword:
                 error_msg = "passwords not the same"
-                return render(request, "register.html", {"error_msg":error_msg})
+                return render(request, "signup.html", {"error_msg":error_msg})
         else:
             # successfully entered username and pwd, save the user info into database
             register = RegisterUser()
@@ -38,7 +38,7 @@ def register(request):
             register.save()
             return redirect("/login/")
     else:
-        return render(request, "register.html")
+        return render(request, "signup.html")
 
 def login(request):
     if request.method == "GET":
@@ -60,5 +60,5 @@ def login(request):
         # username does not exist => return to login page and try again
         except:
             error_msg = "user not exist"
-            return render(request, "login.html", {"error_msg":error_msg})
+            return render(request, "signin.html", {"error_msg":error_msg})
 
