@@ -1,12 +1,17 @@
-# IT project team 26 unimelb
+# Falshcard
 # Flashcard
+Hi, here is branch from Fan, this branch is used to constrct flashcard all back-end and front-end.
 
- This is demo of flashcard. Our flashcard will run based on the question base in flashcard/flashcards.csv. app.py is the back-end code of our flashcard, the index.html in Falshcard/templates are used to construct a web for display our flashcard
+## prepare
+This flashcard run based on html and python (under version 3.11.5, not test under ohter situation), so only need to constrct all environment for python and html, then download all files.
 
-## Getting Started
+## how to run
+download all files and run app.py in compiler, then visit http://127.0.0.1:5000/, demo will display
 
-Download all files in flashcard and run app.py, then visit http://127.0.0.1:5000/ to run the flashcard demo
+### new feature from main
+added several functions and some pages. Now user can select create flashcard or answer question from home page, all questions will store and display from csv file
 
-### Prerequisites
-
-We need basic environment for html files to run and download all files. Python version is 3.11.5
+### new fearture in developing
+UI
+review
+jump from question to question

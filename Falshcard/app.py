@@ -6,6 +6,8 @@ import glob
 import os
 import math
 import copy
+import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'
@@ -15,6 +17,66 @@ def program_directory():
         return os.path.dirname(os.path.abspath(__file__))
     except Exception:
         return os.getcwd()
+    
+
+@app.route('/')
+def homepage():
+    return render_template('homepage.html')
+
+@app.route('/create')
+def create():
+    return render_template('create.html')
+
+def load_flashcards(filename='flashcards.csv'):
+    cards = []
+    with open(filename, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            cards.append({
+                'id': len(cards),
+                'question': row['question'],
+                'answer': row['answer'],
+                'choices': row['choices'].split(';')
+            })
+    return cards
+    
+    # cards = []
+    # df=pd.read_csv(filename)
+    # data = np.array(df)
+    # for row in data:
+    #     print(row)
+    #     cards.append({
+    #         'id': len(cards),
+    #         'question': row[0],
+    #         'answer': row[1],
+    #         'choices': row[2].split(';')
+    #     })
+    # print(cards)
+    # return cards
+
+def save_flashcard(question, answer, choices, filename='flashcards.csv'):
+    with open(filename, 'a', newline='') as file:
+        writer = csv.writer(file)
+        csv.unregister_dialect
+        writer.writerow([question, answer, ";".join(choices)])
+        
+def del_flashcard(question, filename='flashcards.csv'):
+    df=pd.read_csv(filename)
+    df = df[~df['question'].eq(question)]
+    df.to_csv(filename, index=False)
+
+@app.route('/create_flashcard', methods=['POST'])
+def create_flashcard():
+    question = request.form['question']
+    answer = request.form['answer']
+    choices = request.form.getlist('choices')
+    save_flashcard(question, answer, choices)
+    return redirect(url_for('select'))
+
+@app.route('/select')
+def select():
+    flashcards = load_flashcards('flashcards(chinese elements).csv')
+    return render_template('select.html', flashcards=flashcards)
     
 def import_quizlet_lineskip_fix(filepath, fbsep="\t", cardsep="\n"):
     """
@@ -97,20 +159,19 @@ the truncated filename, and the file path.
 
 def get_deck():
     deck_choice = session['deck_choice']
-    decks = glob.glob(program_directory() + "/*.json")
+    decks = glob.glob(program_directory() + "/*.csv")
     numbered_paths_and_names = deck_menu_constructor(decks)
-    file_to_open = open(numbered_paths_and_names[int(deck_choice) - 1][2], 'r')
-    deck = json.loads(file_to_open.read())
-    file_to_open.close()
+    filename = numbered_paths_and_names[int(deck_choice) - 1][2]
+    deck = load_flashcards(filename)
+    session['filename'] = filename
+    
+    # deck_choice = session['deck_choice']
+    # decks = glob.glob(program_directory() + "/*.json")
+    # numbered_paths_and_names = deck_menu_constructor(decks)
+    # file_to_open = open(numbered_paths_and_names[int(deck_choice) - 1][2], 'r')
+    # deck = json.loads(file_to_open.read())
+    # file_to_open.close()
     return deck
-
-def save_deck(deck):
-    deck_choice = session['deck_choice']
-    decks = glob.glob(program_directory() + "/*.json")
-    numbered_paths_and_names = deck_menu_constructor(decks)
-    file_to_open = open(numbered_paths_and_names[int(deck_choice) - 1][2], 'w')
-    json.dump(deck, file_to_open)
-    file_to_open.close()
 
 def card_displayer(card):
     """Take a string and put a box graphic around it. Returns a multiline string"""
@@ -167,32 +228,21 @@ def card_displayer(card):
 
 def display_deck(deck_dict):
     """Display all of the card pairs in the deck, separated by a '-->'."""
-    printout = card_displayer("Front") + '   |\n   V' + card_displayer("Back") + '\n'
-    for key, value in deck_dict.items():
-        printout += card_displayer(key) + '   |\n   V' + card_displayer(value) + "\n"
+    printout = card_displayer("Question") + '   |\n   V' + card_displayer("Answer") + '\n'
+    for item in deck_dict:
+        printout += card_displayer(item['question']) + '   |\n   V' + card_displayer(item['answer']) + "\n"
     return printout
 
 
 @app.route('/guess', methods=['GET', 'POST'])
 def guess():
-    guess = request.form['guess']
+    guess = request.form.get('choice')
     f_b_pairs = session['f_b_pairs']
     random_pair = session['random_pair']
-    back = session['back']
-    
-    guess_test = 0
-    if guess == "a":
-        guess_test = 0
-    elif guess == "b":
-        guess_test = 1
-    elif guess == "c":
-        guess_test = 2
-    elif guess == "d":
-        guess_test = 3
     
     answer = session['answer']
     del session['answer']
-    if guess_test == answer:
+    if guess == answer:
         session['score'] += 1
         f_b_pairs.remove(random_pair)
         session['f_b_pairs'] = f_b_pairs
@@ -200,35 +250,18 @@ def guess():
     else:
         f_b_pairs.remove(random_pair)
         session['f_b_pairs'] = f_b_pairs
-        return render_template('message2.html', message=f"Incorrect. The correct answer is：{card_displayer(random_pair[back])}", href="/quiz_self")
+        return render_template('message2.html', message=f"Incorrect. The correct answer is：{card_displayer(answer)}", href="/quiz_self")
     
 @app.route('/quiz_self', methods=['GET', 'POST'])
 def quiz_self():
-    front = session['front']
-    back = session['back']
     f_b_pairs = session['f_b_pairs']
-    deck_dict = get_deck()
     # Front to back. Display front of card(key) in prompt, and answer must be its value
     if len(f_b_pairs) > 0:
         # From the tuple list, select a random index,
         random_pair = f_b_pairs[randrange(0, len(f_b_pairs))]
         session['random_pair'] = random_pair
-        # list of random card backs/fronts, including one that is the answer
-        multi_dict = [" ", " ", " ", " "]
-        multi_dict[randrange(0, 4)] = random_pair[back]
-        answer = multi_dict.index(random_pair[back])
-        session['answer'] = answer
-        # Build the list from the whole deck (to entries that might have been deleted in tuple_pair_list)
-        # Generate the random index for where to insert, skip if the same as the answer index
-        while multi_dict.count(" ") > 0:
-            for pair in deck_dict.items():
-                fill_location = randrange(0, 4)
-                if pair[back] not in multi_dict:
-                    if fill_location != answer and multi_dict[fill_location] == " ":
-                        multi_dict[fill_location] = pair[back]
-        # The 0th value of the tuple is the card front
-        return render_template("card_displayer.html", data=card_displayer(random_pair[front]) + "\na) " + multi_dict[0] + "\nb) " + multi_dict[1] + "\nc) "
-                          + multi_dict[2] + "\nd) " + multi_dict[3] + "\n")
+        session['answer'] = random_pair['answer']
+        return render_template('quiz.html', flashcard=random_pair)
     else :
         
         score = session['score']
@@ -242,11 +275,7 @@ def answer():
     guess = request.form['guess']
     f_b_pairs = session['f_b_pairs']
     random_pair = session['random_pair']
-    print('------------')
-    print(random_pair)
-    print(f_b_pairs)
-    back = session['back']
-    if guess == random_pair[back]:
+    if guess == random_pair['answer']:
         session['score'] += 1
         f_b_pairs.remove(random_pair)
         session['f_b_pairs'] = f_b_pairs
@@ -254,11 +283,10 @@ def answer():
     else:
         f_b_pairs.remove(random_pair)
         session['f_b_pairs'] = f_b_pairs
-        return render_template('message2.html', message=f"Incorrect. The correct answer is：{card_displayer(random_pair[back])}", href="/answer_quiz")
+        return render_template('message2.html', message=f"Incorrect. The correct answer is：{card_displayer(random_pair['answer'])}", href="/answer_quiz")
 
 @app.route('/answer_quiz', methods=['GET', 'POST'])
 def answer_quiz():
-    front = session['front']
     f_b_pairs = session['f_b_pairs']
     score = session['score']
     top_score = session['top_score']
@@ -266,7 +294,7 @@ def answer_quiz():
         # From the tuple list, select a random index, and the 0th value of that (which is the card front)
         random_pair = f_b_pairs[randrange(0, len(f_b_pairs))]
         session['random_pair'] = random_pair
-        return render_template("card_displayer_ans.html", data=card_displayer(random_pair[front]))
+        return render_template("card_displayer_ans.html", data=card_displayer(random_pair['question']))
     else:
         menu_choice = session['menu_choice']
         return render_template("message3.html", message=f"End of quiz. Your score was {str(round(100 * score / top_score, 2))}%. "
@@ -275,7 +303,6 @@ def answer_quiz():
 @app.route('/report_result', methods=['GET', 'POST'])
 def report_result():
     correct_or_not = request.form['correct_or_not']
-    print(correct_or_not)
     f_b_pairs = session['f_b_pairs']
     random_pair = session['random_pair']
     if correct_or_not == "y":
@@ -289,15 +316,12 @@ def report_result():
 
 @app.route('/show_answer', methods=['GET', 'POST'])
 def show_answer():
-    front = session['front']
-    back = session['back']
     random_pair = session['random_pair']
-    data = card_displayer(random_pair[front]) + "\nThe answer is: {" + card_displayer(random_pair[back]) + "} \nDid you guess correctly? \nAnswer y for yes and n for no: \n"
+    data = card_displayer(random_pair['question']) + "\nThe answer is: {" + card_displayer(random_pair['answer']) + "} \nDid you guess correctly? \nAnswer y for yes and n for no: \n"
     return render_template("card_displayer_show_answer_review.html", data=data)
     
 @app.route('/report_quiz', methods=['GET', 'POST'])
 def report_quiz():
-    front = session['front']
     f_b_pairs = session['f_b_pairs']
     score = session['score']
     top_score = session['top_score']
@@ -307,7 +331,7 @@ def report_quiz():
         # From the tuple list, select a random index, and the 0th value of that (which is the card front)
         random_pair = f_b_pairs[randrange(0, len(f_b_pairs))]
         session['random_pair'] = random_pair
-        return render_template("card_displayer_show_answer.html", data=card_displayer(random_pair[front]) + "Input any key to show answer:")
+        return render_template("card_displayer_show_answer.html", data=card_displayer(random_pair['question']) + "Input any key to show answer:")
     else:
         menu_choice = session['menu_choice']
         return render_template("message3.html", message=f"End of quiz. Your score was {str(round(100 * score / top_score, 2))}%. "
@@ -316,23 +340,13 @@ def report_quiz():
 @app.route('/quiz_length', methods=['GET', 'POST'])
 def quiz_length():
     quiz_length=request.form['quiz_length']
-    quiz_direction = session['direction']
     deck_dict = get_deck()
-    initial_pairs = [pair for pair in deck_dict.items()]
+    initial_pairs = [pair for pair in deck_dict]
     f_b_pairs = []
     while len(f_b_pairs) < int(quiz_length):
         quest_to_add = initial_pairs[randrange(len(initial_pairs))]
         if quest_to_add not in f_b_pairs:
             f_b_pairs.append(quest_to_add)
-    # Cause our default mode is "f" so lets let f's backs and fronts be correct
-    front = 0
-    back = 1
-    # And "b" will be flipped
-    if quiz_direction == "b":
-        front = 0
-        back = 1
-    session['front'] = front
-    session['back'] = back
     session['score'] = 0
     session['top_score'] = len(f_b_pairs)
     session['f_b_pairs'] = f_b_pairs
@@ -390,6 +404,7 @@ def game_check():
         grid[int(choice2[0]) - 1][ord(choice2[1]) - 97] = "0"
     else:
         message = "Sorry, please try again."
+    game_over = False
     for row in grid:
         for itm6 in row:
             if itm6 == "0":
@@ -511,8 +526,11 @@ def memory_game():
     
     deck_dict = get_deck()
     
-    initial_pairs0 = [(i for i in pair) for pair in deck_dict.items()]
+    initial_pairs0 = []
+    for pair in deck_dict:
+        initial_pairs0.append((pair['question'], pair['answer']))
     initial_pairs = [[i for i in pair] for pair in initial_pairs0]
+    print(initial_pairs)
     # Make user choose quiz length
     length_chosen = False
     if not length_chosen:
@@ -560,48 +578,11 @@ def memory_game():
     session['f_b_pairs1'] = f_b_pairs1
     return game_start()
 
-def load_flashcards(filename='flashcards.csv'):
-    cards = []
-    with open(filename, 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            cards.append({
-                'id': len(cards),
-                'question': row['question'],
-                'answer': row['answer'],
-                'choices': row['choices'].split(';')
-            })
-    return cards
 
-def save_flashcard(question, answer, choices, filename='flashcards.csv'):
-    with open(filename, 'a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([question, answer, ";".join(choices)])
-
-@app.route('/')
-def homepage():
-    return render_template('homepage.html')
-
-@app.route('/create')
-def create():
-    return render_template('create.html')
-
-@app.route('/create_flashcard', methods=['POST'])
-def create_flashcard():
-    question = request.form['question']
-    answer = request.form['answer']
-    choices = request.form.getlist('choices')
-    save_flashcard(question, answer, choices)
-    return redirect(url_for('select'))
-
-@app.route('/select')
-def select():
-    flashcards = load_flashcards()
-    return render_template('select.html', flashcards=flashcards)
 
 @app.route('/add_to_base', methods=['POST'])
 def add_to_base():
-    flashcards = load_flashcards()
+    flashcards = load_flashcards('flashcards(chinese elements).csv')
     selected_ids = request.form.getlist('selected')
     session['question_base'] = [flashcards[int(i)] for i in selected_ids]
     session['current_index'] = 0
@@ -625,16 +606,17 @@ def quiz():
                            progress=session['current_index'], 
                            total=len(session['question_base']),
                            correct=session['correct_answers'])
-    
+        
 @app.route('/main')
 def main():
     # Find all json files in local directory, decks will be a list of their paths
-    decks = glob.glob(program_directory() + "/*.json")
+    decks = glob.glob(program_directory() + "/*.csv")
     numbered_paths_and_names = deck_menu_constructor(decks)
     # makes a variable to hold the list of deck names with a given number starting at 1
     decks_choice_display = []
     for name_path_tup in numbered_paths_and_names:
         decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+
     # Deck choice menu prompt
     session['deck_chosen'] = False
     return render_template('main.html', decks_choice_display = decks_choice_display)
@@ -649,11 +631,19 @@ def add_item():
     deck = get_deck()
     new_item_front = request.form['question']
     new_item_back = request.form['answer']
-    if new_item_front == None or new_item_back == None or new_item_front == '' or new_item_back == '':
+    choices = request.form.getlist('choices')
+    choices.insert(randrange(0, 4), new_item_back)
+    if new_item_front == None or new_item_back == None or new_item_front == '' or choices == None:
         return render_template('message.html', message="Input empty!", goback=-1)
-    if new_item_front not in deck:
-        deck[new_item_front] = new_item_back
-        save_deck(deck)
+    
+    inDeck = False
+    for item in deck:
+        if new_item_front == item['question']:
+            inDeck = True
+            break
+    
+    if inDeck == False:
+        save_flashcard(new_item_front, new_item_back, choices, session['filename'])
         message="Added successfully!"
     else:
         message="Word already in deck"
@@ -664,11 +654,17 @@ def add_item():
 def remove_item():
     remove = request.form['remove']
     deck = get_deck()
-    
-    if remove in deck:
-        message="Removed {" + remove + "} ---> {" + deck[remove] + "}"
-        del deck[remove]
-        save_deck(deck)
+    answer = ''
+    isFound = False
+    for d in deck:
+        if d['question'] == remove:
+            isFound = True
+            answer = d['answer']
+            break
+        
+    if isFound:
+        message="Removed {" + remove + "} ---> {" + answer + "}"
+        del_flashcard(remove, session['filename'])
     else:
         message="Word not in deck"
         
@@ -686,7 +682,8 @@ def front_to_back_prompt(direction):
 def quiz_yourself(test_type):
     
     session['test_type'] = test_type
-    return render_template('front_to_back_prompt.html')
+    # return render_template('front_to_back_prompt.html')
+    return render_template('quiz_length.html')
 
 @app.route('/confirm_override', methods=['GET', 'POST'])
 def confirm_override():
@@ -770,7 +767,7 @@ def menu_choice(menu_choice):
     elif menu_choice == 3:
         return render_template("remove_item.html")
     elif menu_choice == 4:
-        return render_template("quiz_yourself.html")
+        return render_template("quiz_yourself.html", href=f"/deck_choice/{session['deck_choice']}")
     elif menu_choice == 5:
         return render_template("memory_game.html", title="Memory Game")
     elif menu_choice == 6:
