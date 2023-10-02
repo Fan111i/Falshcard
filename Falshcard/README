@@ -9,3 +9,7 @@ main ->choose deck ->1. view deck
                      5. play game         
                      6. switch deck
                      7. back
+Upload: The merge of flashcard has been completed on September 28th. Changes:
+  	 	1. Change adding questions to adding questions and multiple-choice answers
+      2. Storage format is csv
+      3. Click the multiple-choice question to start answering and display part of the UI that has been designed.
