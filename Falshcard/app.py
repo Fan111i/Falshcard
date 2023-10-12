@@ -1,8 +1,21 @@
+from crypt import methods
+
+from torch import mul
 from flask import Flask, render_template, request, session, redirect, url_for
 import csv
+import os
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'
+
+app.config['UPLOAD_FOLDER'] = 'multimedia'
+
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'mp3']
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def load_flashcards(filename='flashcards.csv'):
     cards = []
@@ -21,6 +34,24 @@ def save_flashcard(question, answer, choices, filename='flashcards.csv'):
     with open(filename, 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([question, answer, ";".join(choices)])
+
+def load_multimedia(filename='multimedia.csv'):
+    multimedia = []
+    with open(filename, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            multimedia.append({
+                'id': len(multimedia),
+                'file_type': row['file_type'],
+                'file_name': row['file_name']
+            })
+    return multimedia
+
+def save_multimedia(file_type, file_name, filename='multimedia.csv'):
+    with open(filename, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([file_type, file_name])
+
 @app.route('/')
 def homepage():
 
@@ -38,10 +69,20 @@ def create_flashcard():
     save_flashcard(question, answer, choices)
     return redirect(url_for('select'))
 
+@app.route('/create_multimedia', methods=['POST'])
+def create_multimedia():
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        file_name = file.filename
+        file_type = file_name.split('.')[-1]
+        save_multimedia(file_type, file_name)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename));
+    return redirect(url_for('select'))
 
 @app.route('/select')
 def select():
     flashcards = load_flashcards()
+    multimedia = load_multimedia()
     return render_template('select.html', flashcards=flashcards)
 
 @app.route('/add_to_base', methods=['POST'])
