@@ -9,7 +9,7 @@ app.secret_key = 'super_secret_key'
 
 app.config['UPLOAD_FOLDER'] = 'multimedia'
 
-ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', '.mp3']
 
 def allowed_file(filename):
     return '.' in filename and \
