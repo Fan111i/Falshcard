@@ -1,6 +1,5 @@
 from crypt import methods
 
-from torch import mul
 from flask import Flask, render_template, request, session, redirect, url_for
 import csv
 import os
@@ -43,14 +42,15 @@ def load_multimedia(filename='multimedia.csv'):
             multimedia.append({
                 'id': len(multimedia),
                 'file_type': row['file_type'],
-                'file_name': row['file_name']
+                'file_name': row['file_name'],
+                'question': row['question']
             })
     return multimedia
 
-def save_multimedia(file_type, file_name, filename='multimedia.csv'):
+def save_multimedia(file_type, file_name, question, filename='multimedia.csv'):
     with open(filename, 'a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([file_type, file_name])
+        writer.writerow([file_type, file_name, question])
 
 @app.route('/')
 def homepage():
@@ -60,6 +60,10 @@ def homepage():
 @app.route('/create')
 def create():
     return render_template('create.html')
+
+@app.route('/create_media')
+def create_media():
+    return render_template('create_multimedia.html')
 
 @app.route('/create_flashcard', methods=['POST'])
 def create_flashcard():
@@ -71,11 +75,12 @@ def create_flashcard():
 
 @app.route('/create_multimedia', methods=['POST'])
 def create_multimedia():
+    question = request.form['question']
     file = request.files['file']
     if file and allowed_file(file.filename):
         file_name = file.filename
         file_type = file_name.split('.')[-1]
-        save_multimedia(file_type, file_name)
+        save_multimedia(file_type, file_name, question)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename));
     return redirect(url_for('select'))
 
@@ -83,7 +88,7 @@ def create_multimedia():
 def select():
     flashcards = load_flashcards()
     multimedia = load_multimedia()
-    return render_template('select.html', flashcards=flashcards)
+    return render_template('select.html', flashcards=flashcards, multimedia=multimedia)
 
 @app.route('/add_to_base', methods=['POST'])
 def add_to_base():

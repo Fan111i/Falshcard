@@ -4,5 +4,7 @@
     {% for card in flashcards %}
     <input type="checkbox" name="selected" value="{{ card.id }}"> {{ card.question }}<br>
     {% endfor %}
+    {% for media in multimedia %}
+    {% endfor %}
     <input type="submit" value="Start Quiz">
 </form>
