@@ -1,20 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Flashcards</title>
 </head>
 <body>
-    <h1>Select Flashcards</h1>
 
-    <!-- Upload Form -->
-    <h2>Upload New Flashcards</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="csvfile">
-        <input type="submit" value="Upload and Start Quiz">
-    </form>
-    
+<h1>Select and Manage Flashcards</h1>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<!-- Display already uploaded flashcards -->
+{% if 'question_base' in session %}
+    <h2>Uploaded Flashcards</h2>
+    <ul>
+    {% for flashcard in session['question_base'] %}
+        <li>
+            {{ flashcard['question'] }}
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+<!-- Form to allow CSV uploads -->
+<h2>Upload New Flashcards</h2>
+<form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="csvfile">
+    <input type="submit" value="Upload">
+</form>
+
+<!-- Link to start the quiz -->
+<a href="{{ url_for('quiz') }}">Start Quiz</a>
+
 </body>
 </html>
