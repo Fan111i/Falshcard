@@ -1,10 +1,15 @@
 <h2>Select Flashcards</h2>
 
 <form action="/add_to_base" method="post">
+    <h1>Flashcard</h1>
     {% for card in flashcards %}
     <input type="checkbox" name="selected" value="{{ card.id }}"> {{ card.question }}<br>
     {% endfor %}
+    <h1>MultiMedia</h1>
     {% for media in multimedia %}
+    <input type="checkbox" name="selected_multimedia" value="{{ media.id }}"> {{ media.question }}<br>
+    <img src="/multimedia/{{ media.file_name }}" alt="image" width="200" height="200"><br>
     {% endfor %}
+    <br>
     <input type="submit" value="Start Quiz">
 </form>
