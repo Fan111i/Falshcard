@@ -1,6 +1,6 @@
 from crypt import methods
 
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, Response, request, session, redirect, url_for
 import csv
 import os
 
@@ -9,7 +9,7 @@ app.secret_key = 'super_secret_key'
 
 app.config['UPLOAD_FOLDER'] = 'multimedia'
 
-ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'mp3']
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -61,7 +61,15 @@ def homepage():
 def create():
     return render_template('create.html')
 
-@app.route('/create_media')
+@app.route('/multimedia/<name>')
+def get_multimedia(name):
+    file_type = name.split('.')[-1]
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], name), 'rb') as file:
+        image = file.read()
+        resp = Response(image, mimetype="image/{}".format(file_type))
+        return resp
+
+@app.route('/create_multimedia')
 def create_media():
     return render_template('create_multimedia.html')
 
@@ -77,11 +85,15 @@ def create_flashcard():
 def create_multimedia():
     question = request.form['question']
     file = request.files['file']
+    print(question, file)
     if file and allowed_file(file.filename):
         file_name = file.filename
         file_type = file_name.split('.')[-1]
         save_multimedia(file_type, file_name, question)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename));
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+    else:
+        print('File not allowed')
+        return redirect(url_for('create_multimedia'))
     return redirect(url_for('select'))
 
 @app.route('/select')
