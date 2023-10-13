@@ -1,8 +1,20 @@
-<h2>Select Flashcards</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Flashcards</title>
+</head>
+<body>
+    <h1>Select Flashcards</h1>
 
-<form action="/add_to_base" method="post">
-    {% for card in flashcards %}
-    <input type="checkbox" name="selected" value="{{ card.id }}"> {{ card.question }}<br>
-    {% endfor %}
-    <input type="submit" value="Start Quiz">
-</form>
+    <!-- Upload Form -->
+    <h2>Upload New Flashcards</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="csvfile">
+        <input type="submit" value="Upload and Start Quiz">
+    </form>
+    
+</body>
+</html>
