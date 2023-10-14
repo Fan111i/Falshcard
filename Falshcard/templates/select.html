@@ -1,0 +1,28 @@
+<h2>Select Flashcards</h2>
+
+<form action="/add_to_base" method="post">
+    <h1>Flashcard</h1>
+    {% for card in flashcards %}
+    <input type="checkbox" name="selected" value="{{ card.id }}"> {{ card.question }}<br>
+    {% endfor %}
+    <h1>MultiMedia</h1>
+    {% for media in multimedia %}
+        <input type="checkbox" name="selected_multimedia" value="{{ media.id }}"> {{ media.question }}<br>
+        {% if media.file_type == 'mp3': %}
+        <audio controls>
+            <source src="/multimedia/{{ media.file_name }}" type="audio/mpeg">
+        </audio>
+        {% else %}
+            {% if media.file_type == 'mp4': %}
+            <video width="320" height="240" controls>
+                <source src="/multimedia/{{ media.file_name }}" type="video/mp4">
+            </video>
+            {% else %}
+            <img src="/multimedia/{{ media.file_name }}" alt="image" width="200" height="200"><br>
+            {% endif %}
+        {% endif %}
+        
+    {% endfor %}
+    <br>
+    <input type="submit" value="Start Quiz">
+</form>

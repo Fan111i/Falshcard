@@ -1,0 +1,70 @@
+.flashcard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f3f4f6;
+}
+
+.flashcard {
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.question, .photo-area {
+    text-align: center;
+}
+
+.photo-area {
+    height: 200px;
+    background-color: #e0e0e0;  /* 临时的背景色，您可以更改或添加图片 */
+    border-radius: 8px;
+}
+
+.choices {
+    display: flex; /* 使用Flex布局使得选项在一行上 */
+    justify-content: space-between; /* 使得选项在横向上均匀分布 */
+    flex-wrap: wrap; /* 允许选项在必要时换行，虽然在1x4的情况下可能用不到 */
+    gap: 10px; /* 选项之间的间隔 */
+}
+
+
+.choice-card {
+    background-color: #e0e0e0; 
+    padding: 10px 20px;
+    margin: 5px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 15px; 
+    width: auto;  /* 允许选项卡片根据内容宽度自适应 */
+    min-width: 50px; /* 设置一个合理的最小宽度 */
+    max-width: 100%; /* 允许选项卡片在必要时可以占用整行的宽度 */
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+
+.choice-card:hover {
+    background-color: #8b8787;
+}
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #357ab7;
+}
