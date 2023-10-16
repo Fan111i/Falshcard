@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* 设置body高度为视口高度 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 垂直居中 */
+            align-items: center; /* 水平居中 */
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd); /* 使用淡黄色到淡蓝色的渐变背景 */
+            line-height: 1.5; /* 增加行间距 */
+        }
+
+        h2 {
+            color: #FF91A4; /* 粉色标题 */
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px; /* 增加间隔 */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%; /* 设置表单宽度 */
+        }
+
+        label {
+            font-size: 1.5em; /* 增大字体大小 */
+            margin-bottom: 20px; /* 增加间隔 */
+        }
+
+        input[type="text"] {
+            font-size: 1.2em; /* 增大字体大小 */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px; /* 增加间隔 */
+            width: 100%; /* 宽度为100% */
+        }
+
+        input[type="submit"] {
+            font-size: 1.2em; /* 增大字体大小 */
+            background-color: #FF91A4; /* 粉色背景 */
+            color: white; /* 白色文字 */
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* 过渡效果 */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #FF7090; /* 悬停时的深粉色背景 */
+        }
+    </style>
+</head>
+<body>
+    <h2>Remove Item</h2>
+
+    <form action="/remove_item" method="post">
+        <label for="remove_input">
+            Please input the card front you'd like to remove:
+        </label>
+        <input type="text" id="remove_input" name="remove">
+        <input type="submit" value="Remove">
+    </form>
+</body>
+</html>

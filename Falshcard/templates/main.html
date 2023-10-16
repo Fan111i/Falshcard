@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Decks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd);
+            line-height: 1.5; /* 增加行间距 */
+        }
+
+        h2 {
+            color: #FF91A4;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px; /* 增加间距 */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        div {
+            margin-bottom: 20px; /* 增加间距 */
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #FF91A4;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            display: inline-block;
+            font-size: 1.2em; /* 增加字体大小 */
+        }
+
+        a:hover {
+            background-color: #FF7090;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h2>Please choose a deck:</h2>
+    {% for deck in decks_choice_display %}
+        <div>
+            <a href="/deck_choice/{{deck.id}}">{{ deck.id }}) {{ deck.name }}</a>
+        </div>
+    {% endfor %}
+</body>
+</html>

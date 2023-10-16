@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Flashcard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            /* 添加渐变背景色 */
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd);
+        }
+
+        form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #FF91A4; /* 修改为粉色 */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #FF7090; /* 修改为深一点的粉色 */
+        }
+    </style>
+</head>
+<body>
+    <h2>Create Flashcard</h2>
+
+    <form action="/add_item" method="post">
+        <label>
+            Question:
+            <input type="text" name="question">
+        </label>
+        <label>
+            Answer:
+            <input type="text" name="answer">
+        </label>
+        <label>Choices (minimum 1 choice, including answer):</label>
+        <input type="text" name="choices"><br>
+        <input type="text" name="choices"><br>
+        <input type="text" name="choices"><br>
+        <input type="submit" value="Create and Select">
+    </form>
+</body>
+</html>

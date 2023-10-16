@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* 设置body高度为视口高度 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 垂直居中 */
+            align-items: center; /* 水平居中 */
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd); /* 使用淡黄色到淡蓝色的渐变背景 */
+            line-height: 1.5; /* 增加行间距 */
+        }
+
+        h2 {
+            color: #FF91A4; /* 粉色标题 */
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px; /* 增加间隔 */
+        }
+
+        p {
+            font-size: 1.5em; /* 增大字体大小 */
+            margin-bottom: 20px; /* 增加间隔 */
+        }
+
+        a {
+            text-decoration: none; /* 去掉下划线 */
+            color: white; /* 白色文字 */
+            background-color: #FF91A4; /* 粉色背景 */
+            padding: 10px 15px; /* 增加填充 */
+            border-radius: 4px;
+            transition: background-color 0.3s; /* 过渡效果 */
+            font-size: 1.5em; /* 增大字体大小 */
+        }
+
+        a:hover {
+            background-color: #FF7090; /* 悬停时的深粉色背景 */
+        }
+    </style>
+</head>
+<body>
+    <h2>Results</h2>
+    <p>You answered {{ correct }} out of {{ total }} questions correctly!</p>
+    <a href="/">Go back to selection</a>
+</body>
+</html>
