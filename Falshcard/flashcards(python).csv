@@ -1,4 +1,4 @@
-question,answer,choices
-What is the capital of France?,Paris,Paris;Berlin;Rome;Madrid
-What is the currency of Japan?,Yen,Yen;Dollar;Euro;Pound
-a,b,c;d;b;e
+question,answer,choices,file_type,file_name
+What is the capital of France?,Paris,Paris;Berlin;Rome;Madrid,,
+What is the currency of Japan?,Yen,Yen;Dollar;Euro;Pound,,
+a,b,c;d;b;e,,

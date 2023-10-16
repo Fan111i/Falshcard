@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, Response
 import csv
 from random import randrange
 import json
@@ -11,6 +11,20 @@ import numpy as np
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'
+
+app.config['UPLOAD_FOLDER'] = 'multimedia'
+
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', '.mp3']
+
+ALLOWED_IMAGES = ['png', 'jpg', 'jpeg', 'gif']
+
+def allowed_images(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGES 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def program_directory():
     try:
@@ -36,6 +50,8 @@ def load_flashcards(filename='flashcards.csv'):
                 'id': len(cards),
                 'question': row['question'],
                 'answer': row['answer'],
+                'file_type': row['file_type'],
+                'file_name': row['file_name'],
                 'choices': row['choices'].split(';')
             })
     return cards
@@ -54,23 +70,47 @@ def load_flashcards(filename='flashcards.csv'):
     # print(cards)
     # return cards
 
-def save_flashcard(question, answer, choices, filename='flashcards.csv'):
+def save_flashcard(question, answer, choices, file_type, file_name, filename='flashcards.csv'):
     with open(filename, 'a', newline='') as file:
         writer = csv.writer(file)
         csv.unregister_dialect
-        writer.writerow([question, answer, ";".join(choices)])
+        writer.writerow([question, answer, ";".join(choices), file_type, file_name])
         
 def del_flashcard(question, filename='flashcards.csv'):
     df=pd.read_csv(filename)
     df = df[~df['question'].eq(question)]
     df.to_csv(filename, index=False)
 
+@app.route('/multimedia/<name>')
+def get_multimedia(name):
+    file_type = name.split('.')[-1]
+    if file_type and allowed_images(name):
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], name), 'rb') as file:
+            image = file.read()
+            resp = Response(image, mimetype="image/{}".format(file_type))
+            return resp
+    else:
+        def generate():
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], name), "rb") as fwav:
+                data = fwav.read(1024)
+                while data:
+                    yield data
+                    data = fwav.read(1024)
+        resp = Response(generate(), mimetype="audio/mpeg")
+        return resp
+
 @app.route('/create_flashcard', methods=['POST'])
 def create_flashcard():
     question = request.form['question']
     answer = request.form['answer']
     choices = request.form.getlist('choices')
-    save_flashcard(question, answer, choices)
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        file_name = file.filename
+        file_type = file_name.split('.')[-1]
+        save_flashcard(question, answer, choices, file_type, file_name)
+    else:
+        save_flashcard(question, answer, choices, '', '')
     return redirect(url_for('select'))
 
 @app.route('/select')
@@ -643,7 +683,14 @@ def add_item():
             break
     
     if inDeck == False:
-        save_flashcard(new_item_front, new_item_back, choices, session['filename'])
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            file_name = file.filename
+            file_type = file_name.split('.')[-1]
+            print(new_item_front, new_item_back, choices, file_type, file_name)
+            save_flashcard(new_item_front, new_item_back, choices, file_type, file_name, session['filename'])
+        else:
+            save_flashcard(new_item_front, new_item_back, choices, '', '', session['filename'])
         message="Added successfully!"
     else:
         message="Word already in deck"
