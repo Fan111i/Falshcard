@@ -1,11 +1,63 @@
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd);
+        }
 
-    </head>
-    <body>
-        <H2>
-        menu
-        </H2>
+        h2 {
+            color: #FF91A4;
+            font-size: 3em;
+            text-align: center;
+            border-bottom: 2px solid #FF91A4;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .menu-box {
+            background-color: #f9f9f9; /* 浅灰色背景 */
+            border: 2px solid rgba(255, 145, 164, 0.6); /* 增加透明度的粉色边框 */
+            padding: 20px;
+            border-radius: 8px;
+            width: 60%;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+        }
+
+        div {
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #FF91A4;
+            padding: 10px 40px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+
+        a:hover {
+            background-color: #FF7090;
+        }
+    </style>
+</head>
+<body>
+    <h2>Menu</h2>
+    <div class="menu-box">
         <div>
             <a href="/menu_choice/1">1. View deck</a>
         </div>
@@ -25,8 +77,8 @@
             <a href="/menu_choice/6">6. Switch decks</a>
         </div>
         <div>
-        <a href="/main">7. Back</a>
+            <a href="/main">7. Back</a>
         </div>
-    </body>
-    
+    </div>
+</body>
 </html>

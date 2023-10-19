@@ -5,35 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcard App</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd);
+            line-height: 1.5; /* 增加行间距 */
+        }
+
+        h2 {
+            color: #FF91A4;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px; /* 增加间距 */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px; /* 增加间距 */
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 30px; /* 增加间距 */
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        input[type="submit"] {
+            text-decoration: none;
+            color: white;
+            background-color: #FF91A4;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            display: inline-block;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #FF7090;
+            transform: scale(1.1);
+        }
+
+        #result {
+            text-align: center;
+            font-size: 1.2em;
+            color: #FF91A4;
+        }
+    </style>
 </head>
 <body>
-
-<h2>Flashcard App</h2>
-
-<p><strong>Question:</strong> {{ question }}</p>
-
-<form id="answerForm">
-    {% for choice in choices %}
-        <input type="radio" name="choice" value="{{ choice }}">{{ choice }}<br>
-    {% endfor %}
-    <input type="submit" value="Check Answer">
-</form>
-
-<p id="result"></p>
-
-<script>
-    $("#answerForm").submit(function(event){
-        event.preventDefault();
-        let formData = $(this).serialize();
-        $.post("/check_answer", formData, function(data){
-            if(data.is_correct){
-                $("#result").text("Correct! The answer is: " + data.correct_answer);
-            } else {
-                $("#result").text("Incorrect! The correct answer is: " + data.correct_answer);
-            }
+    <h2>Flashcard System</h2>
+    <p><strong>Question:</strong> {{ question }}</p>
+    <form id="answerForm">
+        {% for choice in choices %}
+            <div>
+                <input type="radio" name="choice" value="{{ choice }}">{{ choice }}
+            </div>
+        {% endfor %}
+        <div>
+            <input type="submit" value="Check Answer">
+        </div>
+    </form>
+    <p id="result"></p>
+    <script>
+        $("#answerForm").submit(function(event){
+            event.preventDefault();
+            let formData = $(this).serialize();
+            $.post("/check_answer", formData, function(data){
+                if(data.is_correct){
+                    $("#result").text("Correct! The answer is: " + data.correct_answer);
+                } else {
+                    $("#result").text("Incorrect! The correct answer is: " + data.correct_answer);
+                }
+            });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>

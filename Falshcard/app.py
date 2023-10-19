@@ -14,7 +14,7 @@ app.secret_key = 'super_secret_key'
 
 app.config['UPLOAD_FOLDER'] = 'multimedia'
 
-ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', '.mp3']
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'mp3','mp4']
 
 ALLOWED_IMAGES = ['png', 'jpg', 'jpeg', 'gif']
 
@@ -108,6 +108,7 @@ def create_flashcard():
     if file and allowed_file(file.filename):
         file_name = file.filename
         file_type = file_name.split('.')[-1]
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
         save_flashcard(question, answer, choices, file_type, file_name)
     else:
         save_flashcard(question, answer, choices, '', '')
@@ -303,7 +304,6 @@ def quiz_self():
         session['answer'] = random_pair['answer']
         return render_template('quiz.html', flashcard=random_pair)
     else :
-        
         score = session['score']
         top_score = session['top_score']
         menu_choice = session['menu_choice']
@@ -672,6 +672,7 @@ def add_item():
     new_item_front = request.form['question']
     new_item_back = request.form['answer']
     choices = request.form.getlist('choices')
+    file = request.files['file']
     choices.insert(randrange(0, 4), new_item_back)
     if new_item_front == None or new_item_back == None or new_item_front == '' or choices == None:
         return render_template('message.html', message="Input empty!", goback=-1)
@@ -683,11 +684,10 @@ def add_item():
             break
     
     if inDeck == False:
-        file = request.files['file']
         if file and allowed_file(file.filename):
             file_name = file.filename
             file_type = file_name.split('.')[-1]
-            print(new_item_front, new_item_back, choices, file_type, file_name)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
             save_flashcard(new_item_front, new_item_back, choices, file_type, file_name, session['filename'])
         else:
             save_flashcard(new_item_front, new_item_back, choices, '', '', session['filename'])

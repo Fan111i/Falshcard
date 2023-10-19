@@ -1,14 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcard System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd); /* 使用淡黄色到淡蓝色的渐变背景 */
+        }
+
+        h2 {
+            color: #FF91A4; /* 粉色标题 */
+            font-size: 2.5em; /* 增大字体大小 */
+            text-align: center; /* 居中对齐 */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 添加文字阴影效果 */
+        }
+
+        a {
+            text-decoration: none; /* 去掉下划线 */
+            color: white; /* 白色文字 */
+            background-color: #FF91A4; /* 粉色背景 */
+            padding: 10px 15px; /* 增加填充 */
+            border-radius: 4px;
+            transition: background-color 0.3s, transform 0.3s; /* 添加背景色和变换的过渡效果 */
+            display: inline-block; /* 使得padding生效 */
+        }
+
+        a:hover {
+            background-color: #FF7090; /* 悬停时的深粉色背景 */
+            transform: scale(1.1); /* 悬停时稍微放大 */
+        }
+    </style>
 </head>
 <body>
-
-<h2>Welcome to Flashcard System</h2>
-<p>
-    <a href="/main">Main</a>
-</p>
-
+    <h2>Welcome to Flashcard System</h2>
+    <p>
+        <a href="/main">Get Start</a>
+    </p>
 </body>
 </html>

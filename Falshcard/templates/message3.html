@@ -1,9 +1,86 @@
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Page</title>
+    <!-- 引入Google Fonts中的 'Orbitron' 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(to bottom right, #f2e9e4, #dfe7fd);
+            line-height: 1.5; /* 增加行间距 */
+        }
 
-    </head>
-    <body>
-        <h2><pre>{{message}}</pre></h2>
-        <div> <a href="{{ href }}">finish</a> </div>
-    </body>
+        h2 {
+            color: #FF91A4;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px; /* 增加间距 */
+        }
+
+        div {
+            text-align: center;
+            font-size: 1.5em; /* 增大字体大小 */
+            color: #FF91A4;
+            margin-bottom: 20px; /* 增加间距 */
+        }
+
+        a {
+            font-weight: bold;
+            font-size: 2em; /* 增大字体大小 */
+            color: white;
+            background-color: #FF91A4;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: transform 0.5s; /* 添加动态效果 */
+            text-decoration: none; /* 去除下划线 */
+        }
+
+        a:hover {
+            transform: scale(1.1); /* 悬停时放大效果 */
+        }
+
+        #count_down {
+            display: block;
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif; /* 使用特殊字体 */
+            font-weight: bold;
+            font-size: 2.5em; /* 增大字体大小 */
+            color: #FF91A4;
+        }
+    </style>
+</head>
+<body>
+    <h2>{{message}}</h2>
+    <div> 
+        <a href="{{ href }}">finish</a> 
+        <span id="count_down">3s</span>
+    </div>
+
+    <script type="text/javascript">
+        var hrefs = "{{ href }}"
+        var time = 3
+        var box = document.querySelector('#count_down')
+        getTime()
+        setInterval(getTime, 1000)
+        function getTime() {
+            console.log(time)
+            if (time == 0) {
+                window.location.href = hrefs
+            } else {
+                box.innerHTML = time + 's'
+            }
+            time--
+        }
+    </script>
+</body>
 </html>
