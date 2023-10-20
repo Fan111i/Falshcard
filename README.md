@@ -7,7 +7,7 @@ The purpose of this project is to realize the flashcard system of C-LARA platfor
 This flashcard run based on html and python (under version 3.11.5, not test under ohter situation), so only need to constrct all environment for python and html, then download all files.
 
 ## How to run
-download all files and run app.py will apple adress.
+download all files and run app.py will apply adress.
 
 ### new feature from main
 added several functions and some pages. Now user can select create flashcard or answer question from home page, all questions will store and display from csv file
