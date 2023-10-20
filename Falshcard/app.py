@@ -9,7 +9,11 @@ import copy
 import pandas as pd
 import numpy as np
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='', 
+    static_folder='static'
+)
 app.secret_key = 'super_secret_key'
 
 app.config['UPLOAD_FOLDER'] = 'multimedia'
@@ -35,7 +39,55 @@ def program_directory():
 
 @app.route('/')
 def homepage():
-    return render_template('homepage.html')
+    decks = glob.glob(program_directory() + "/*.csv")
+    numbered_paths_and_names = deck_menu_constructor(decks)
+    # makes a variable to hold the list of deck names with a given number starting at 1
+    decks_choice_display = []
+    for name_path_tup in numbered_paths_and_names:
+        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+
+    # Deck choice menu prompt
+    session['deck_chosen'] = False
+    return render_template('homepage.html', decks_choice_display = decks_choice_display)
+
+@app.route('/contact')
+def contact():
+    decks = glob.glob(program_directory() + "/*.csv")
+    numbered_paths_and_names = deck_menu_constructor(decks)
+    # makes a variable to hold the list of deck names with a given number starting at 1
+    decks_choice_display = []
+    for name_path_tup in numbered_paths_and_names:
+        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+
+    # Deck choice menu prompt
+    session['deck_chosen'] = False
+    return render_template('contact.html', decks_choice_display = decks_choice_display)
+
+@app.route('/signin')
+def login():
+    decks = glob.glob(program_directory() + "/*.csv")
+    numbered_paths_and_names = deck_menu_constructor(decks)
+    # makes a variable to hold the list of deck names with a given number starting at 1
+    decks_choice_display = []
+    for name_path_tup in numbered_paths_and_names:
+        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+
+    # Deck choice menu prompt
+    session['deck_chosen'] = False
+    return render_template('signin.html', decks_choice_display = decks_choice_display)
+
+@app.route('/signup')
+def register():
+    decks = glob.glob(program_directory() + "/*.csv")
+    numbered_paths_and_names = deck_menu_constructor(decks)
+    # makes a variable to hold the list of deck names with a given number starting at 1
+    decks_choice_display = []
+    for name_path_tup in numbered_paths_and_names:
+        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+
+    # Deck choice menu prompt
+    session['deck_chosen'] = False
+    return render_template('signup.html', decks_choice_display = decks_choice_display)
 
 @app.route('/create')
 def create():
