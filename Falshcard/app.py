@@ -257,6 +257,13 @@ def get_deck():
     filename = numbered_paths_and_names[int(deck_choice) - 1][2]
     deck = load_flashcards(filename)
     session['filename'] = filename
+    
+    # deck_choice = session['deck_choice']
+    # decks = glob.glob(program_directory() + "/*.json")
+    # numbered_paths_and_names = deck_menu_constructor(decks)
+    # file_to_open = open(numbered_paths_and_names[int(deck_choice) - 1][2], 'r')
+    # deck = json.loads(file_to_open.read())
+    # file_to_open.close()
     return deck
 
 def card_displayer(card):
