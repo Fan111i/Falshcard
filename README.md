@@ -9,10 +9,10 @@ This flashcard run based on html and python (under version 3.11.5, not test unde
 ## How to run
 download all files and run app.py will apply adress.
 
-### Features that have been implemented and tested
-log in and log up
-Flashcard deck selection
-View item ——— View questions and answers from the selected deck
+## Features that have been implemented and tested
+### log in and log up
+### Flashcard deck selection
+### View item #### View questions and answers from the selected deck
 Add item ——— Add answers and options
   Update：1.Multimedia (images, audio (mp3 files) and video (mp4)) files can now be added when adding questions, answers and options.
           2.Added multimedia displays successfully with the question (tested)
