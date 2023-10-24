@@ -18,17 +18,18 @@ download all files and run app.py will apply adress.
     * Update：* 1.Multimedia (images, audio (mp3 files) and video (mp4)) files can now be added when adding questions, answers and options.
               * 2.Added multimedia displays successfully with the question (tested)
 ### Quiz yoursefl ——— Multiple choice questions（flashcard main question types）
-                  Answer question（More diverse question types envisioned for the future）
-                  Self report（More diverse question types envisioned for the future）
-                  Update： To add feedback functions and reports after answering questions, for example:
+                 * Answer question（More diverse question types envisioned for the future）
+                 * Self report（More diverse question types envisioned for the future）
+                 * Update： To add feedback functions and reports after answering questions, for example:
                            After completing a question and submitting a wrong answer, the correct answer will be displayed and a countdown will begin. When the countdown ends, it will enter the next                             question. 
                            After completing all questions, the correct rate will be displayed as a score.
 ### Play a game—— A simple memory game based on the flashcard function (the main purpose is to design some interesting games to help users learn in the future)
 ## API
 Most of the API work is complete and the web code can be found in the tamplate in the Flashcard folder.
 ## UI design
-Most of the web pages and Flahcard UI have been completed, and the specific effects can be found on Google drive: https://drive.google.com/drive/folders/1-2aZ1leEu6sYL7WKsT80ouxS-IgTI0i7?usp=sharing
-Additional information—— There are no web pages with UI design added to Flashcard and the reasons are as follows:
+* Most of the web pages and Flahcard UI have been completed, and the specific effects can be found on Google drive: https://drive.google.com/drive/folders/1-2aZ1leEu6sYL7WKsT80ouxS-IgTI0i7? 
+  usp=sharing
+  Additional information—— There are no web pages with UI design added to Flashcard and the reasons are as follows:
                           1. View deck
                           2. Quiz yourself—answer quiz and Self report
                           3. Play a game
