@@ -15,8 +15,8 @@ download all files and run app.py will apply adress.
 ### View item 
     View questions and answers from the selected deck
 ### Add item ——— Add answers and options
-    Update：1.Multimedia (images, audio (mp3 files) and video (mp4)) files can now be added when adding questions, answers and options.
-            2.Added multimedia displays successfully with the question (tested)
+    * Update：* 1.Multimedia (images, audio (mp3 files) and video (mp4)) files can now be added when adding questions, answers and options.
+              * 2.Added multimedia displays successfully with the question (tested)
 ### Quiz yoursefl ——— Multiple choice questions（flashcard main question types）
                   Answer question（More diverse question types envisioned for the future）
                   Self report（More diverse question types envisioned for the future）
