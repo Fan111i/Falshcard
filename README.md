@@ -22,7 +22,7 @@ Quiz yoursefl ——— Multiple choice questions（flashcard main question type
                   Update： To add feedback functions and reports after answering questions, for example:
                            After completing a question and submitting a wrong answer, the correct answer will be displayed and a countdown will begin. When the countdown ends, it will enter the next                             question. 
                            After completing all questions, the correct rate will be displayed as a score.
-Play a gamme—— A simple memory game based on the flashcard function (the main purpose is to design some interesting games to help users learn in the future)
+Play a game—— A simple memory game based on the flashcard function (the main purpose is to design some interesting games to help users learn in the future)
 ### API
 Most of the API work is complete and the web code can be found in the tamplate in the Flashcard folder.
 ### UI design
