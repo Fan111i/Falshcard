@@ -16,7 +16,7 @@ app = Flask(
 )
 app.secret_key = 'super_secret_key'
 
-app.config['UPLOAD_FOLDER'] = 'multimedia'
+app.config['UPLOAD_FOLDER'] = os.path.join("Falshcard", "multimedia")
 
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'mp3','mp4']
 
