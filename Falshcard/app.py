@@ -44,7 +44,8 @@ def homepage():
     # makes a variable to hold the list of deck names with a given number starting at 1
     decks_choice_display = []
     for name_path_tup in numbered_paths_and_names:
-        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+        if str(name_path_tup[1]) != 'users':
+            decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
 
     # Deck choice menu prompt
     session['deck_chosen'] = False
@@ -57,37 +58,98 @@ def contact():
     # makes a variable to hold the list of deck names with a given number starting at 1
     decks_choice_display = []
     for name_path_tup in numbered_paths_and_names:
-        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+        if str(name_path_tup[1]) != 'users':
+            decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
 
     # Deck choice menu prompt
     session['deck_chosen'] = False
     return render_template('contact.html', decks_choice_display = decks_choice_display)
 
-@app.route('/signin')
-def login():
+@app.route('/signin', methods=['GET'])
+def signin():
     decks = glob.glob(program_directory() + "/*.csv")
     numbered_paths_and_names = deck_menu_constructor(decks)
     # makes a variable to hold the list of deck names with a given number starting at 1
     decks_choice_display = []
     for name_path_tup in numbered_paths_and_names:
-        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+        if str(name_path_tup[1]) != 'users':
+            decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
 
     # Deck choice menu prompt
     session['deck_chosen'] = False
     return render_template('signin.html', decks_choice_display = decks_choice_display)
 
-@app.route('/signup')
-def register():
+@app.route('/signup', methods=['GET'])
+def signup():
     decks = glob.glob(program_directory() + "/*.csv")
     numbered_paths_and_names = deck_menu_constructor(decks)
     # makes a variable to hold the list of deck names with a given number starting at 1
     decks_choice_display = []
     for name_path_tup in numbered_paths_and_names:
-        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+        if str(name_path_tup[1]) != 'users':
+            decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
 
     # Deck choice menu prompt
     session['deck_chosen'] = False
     return render_template('signup.html', decks_choice_display = decks_choice_display)
+
+def load_users(filename="users.csv"):
+    users = []
+    with open(filename, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            print(row)
+            users.append({
+                'id': len(users),
+                'username': row['username'],
+                'email': row['email'],
+                'password': row['password']
+            })
+    return users
+
+def save_user(username, email, password, filename='users.csv'):
+    with open(filename, 'a', newline='') as file:
+        writer = csv.writer(file)
+        csv.unregister_dialect
+        writer.writerow([username, email, password])
+
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
+    cpassword = request.form['cpassword']
+    print(username, email, password, cpassword)
+    if password != cpassword:
+        return redirect(url_for('signup'))
+    users = load_users('users.csv')
+    for user in users:
+        if user['username'] == username or user['email'] == email:
+            return redirect(url_for('signup'))
+    save_user(username, email, password)
+    return redirect(url_for('signin'))
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    users = load_users('users.csv')
+    for user in users:
+        if user['username'] == username and user['password'] == password:
+            decks = glob.glob(program_directory() + "/*.csv")
+            numbered_paths_and_names = deck_menu_constructor(decks)
+            # makes a variable to hold the list of deck names with a given number starting at 1
+            decks_choice_display = []
+            for name_path_tup in numbered_paths_and_names:
+                if str(name_path_tup[1]) != 'users':
+                    decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+
+            # Deck choice menu prompt
+            session['deck_chosen'] = False
+            return render_template('main.html', decks_choice_display = decks_choice_display)
+        else:
+            return redirect(url_for('signin'))
+    return render_template('signin')
 
 @app.route('/create')
 def create():
@@ -707,7 +769,8 @@ def main():
     # makes a variable to hold the list of deck names with a given number starting at 1
     decks_choice_display = []
     for name_path_tup in numbered_paths_and_names:
-        decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
+        if str(name_path_tup[1]) != 'users':
+            decks_choice_display.append({'id': str(name_path_tup[0]), 'name': str(name_path_tup[1])})
 
     # Deck choice menu prompt
     session['deck_chosen'] = False
