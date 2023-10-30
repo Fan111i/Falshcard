@@ -95,7 +95,7 @@ def signup():
 
 def load_users(filename="users.csv"):
     users = []
-    with open(filename, 'r') as file:
+    with open(program_directory() + '/' + filename, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             print(row)
@@ -108,7 +108,7 @@ def load_users(filename="users.csv"):
     return users
 
 def save_user(username, email, password, filename='users.csv'):
-    with open(filename, 'a', newline='') as file:
+    with open(program_directory() + '/' + filename, 'a', newline='') as file:
         writer = csv.writer(file)
         csv.unregister_dialect
         writer.writerow([username, email, password])
