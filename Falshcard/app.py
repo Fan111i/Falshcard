@@ -146,6 +146,7 @@ def login():
 
             # Deck choice menu prompt
             session['deck_chosen'] = False
+            session['username'] = username
             return render_template('main.html', decks_choice_display = decks_choice_display)
         else:
             return redirect(url_for('signin'))
@@ -387,7 +388,6 @@ def display_deck(deck_dict):
     for item in deck_dict:
         printout += card_displayer(item['question']) + '   |\n   V' + card_displayer(item['answer']) + "\n"
     return printout
-
 
 @app.route('/guess', methods=['GET', 'POST'])
 def guess():
@@ -732,8 +732,6 @@ def memory_game():
     session['f_b_pairs1'] = f_b_pairs1
     return game_start()
 
-
-
 @app.route('/add_to_base', methods=['POST'])
 def add_to_base():
     flashcards = load_flashcards('flashcards(chinese elements).csv')
@@ -763,6 +761,8 @@ def quiz():
         
 @app.route('/main')
 def main():
+    if not session['username']:
+        return redirect(url_for('signin'))
     # Find all json files in local directory, decks will be a list of their paths
     decks = glob.glob(program_directory() + "/*.csv")
     numbered_paths_and_names = deck_menu_constructor(decks)
@@ -936,7 +936,6 @@ def menu_choice(menu_choice):
         return main()
     elif menu_choice == 7:
         return choose_file()
-    
 
 if __name__ == '__main__':
     app.run(debug=True)
