@@ -148,8 +148,6 @@ def login():
             session['deck_chosen'] = False
             session['username'] = username
             return render_template('main.html', decks_choice_display = decks_choice_display)
-        else:
-            return redirect(url_for('signin'))
     return render_template('signin')
 
 @app.route('/create')
